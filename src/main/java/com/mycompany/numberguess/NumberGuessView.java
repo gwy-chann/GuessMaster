@@ -19,8 +19,8 @@ public class NumberGuessView extends javax.swing.JFrame {
      * Creates new form NumberGuessView
      */
     public NumberGuessView() {
-      initComponents();
-      this.btnReset.setVisible(false);
+        initComponents();
+        btnReset.setVisible(false);
     }
     
     
@@ -186,21 +186,17 @@ public class NumberGuessView extends javax.swing.JFrame {
 
     private void btnResetMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnResetMouseClicked
         // TODO add your handling code here:
-        
-        this.lblMessage.setText("Guess again.");
-         this.txtGuessNumber.setText("");
-         
-        Random random = new Random();
-        randomNumber = random.nextInt(100) + 1;
-        
-        this.btnReset.setVisible(false);
-        
+      onReset();
     }//GEN-LAST:event_btnResetMouseClicked
 
     private void txtGuessNumberKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGuessNumberKeyPressed
         // TODO add your handling code here:
         
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            if(isDone) {
+                onReset();
+                return;
+            }
             onSubmit();
         }
     }//GEN-LAST:event_txtGuessNumberKeyPressed
@@ -212,54 +208,60 @@ public class NumberGuessView extends javax.swing.JFrame {
     }//GEN-LAST:event_btnAboutMouseClicked
 
     
+    private void onReset() {
+        lblMessage.setText("Guess again.");
+        txtGuessNumber.setText("");
+        
+        btnReset.setVisible(false);
+        tryCount = 0;
+        isDone = false;
+        
+    }
     private void onSubmit() {
- 
+        // This converts the string into an integer
         int txtPlayerGuess = Integer.parseInt(this.txtGuessNumber.getText());
         
         if("".equals(this.txtGuessNumber.getText())) return;
         
         tryCount++;
         
-         if (tryCount == 5) {   
+         if (tryCount == 6) {   
                 lblMessage.setText("Game Over! The random number is " + randomNumber + " Play again.");
-       
-                tryCount = 0;
-               
-       
-                btnReset.setVisible(true);
+                btnReset.setVisible(true);      
+                isDone = true;
                 return;
-            }
-        
+         }
+            
         if (txtPlayerGuess == randomNumber) {
-    
-            lblMessage.setText("Correct! You win. It only took you " + tryCount + " tries");
-            btnReset.setVisible(true);
             
-        } else if (randomNumber > txtPlayerGuess) {
-            
-            txtGuessNumber.setText("");
-            lblMessage.setText("Nope. The number is higher. Guess again");
+               lblMessage.setText("Correct it only took you " + tryCount + " tries.");
+               isDone = true;
+                btnReset.setVisible(true);
+                
+        }   else if (randomNumber > txtPlayerGuess) {
+               
+                txtGuessNumber.setText("");
+                lblMessage.setText("The random number is higher");
             
         } else {
             
-            txtGuessNumber.setText("");
-            lblMessage.setText("Nope. The number is lower. Guess again");
+                txtGuessNumber.setText("");
+                lblMessage.setText("The random number is lower");  
             
         }
-        
+    
     
     }
     
+    
     static int randomNumber = 0;
     static int tryCount = 0;
+    static boolean isDone = false;
     public static void main(String args[]) {
   
         Random random = new Random();
         randomNumber = random.nextInt(100) + 1;
-    
-        
-        System.out.println("The random number is : " + randomNumber);
-        
+        System.out.println(randomNumber);
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
